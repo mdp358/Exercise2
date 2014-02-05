@@ -1,0 +1,38 @@
+import lejos.nxt.Button;
+import lejos.nxt.LightSensor;
+import lejos.nxt.Motor;
+import lejos.nxt.SensorPort;
+import lejos.nxt.TouchSensor;
+import lejos.robotics.navigation.DifferentialPilot;
+import lejos.util.Delay;
+
+public class Part12 {
+	final static DifferentialPilot pilot = new DifferentialPilot(50, 118,
+			Motor.C, Motor.A);
+
+	LightSensor left = new LightSensor(SensorPort.S2);
+	LightSensor right = new LightSensor(SensorPort.S3);
+
+	public void run() {
+		LightSensor left = new LightSensor(SensorPort.S2);
+		LightSensor right = new LightSensor(SensorPort.S3);
+
+		while (true) {
+			pilot.forward();
+			if (left.getLightValue() > right.getLightValue()) {
+				pilot.rotate(5);
+			} else if (right.getLightValue() > left.getLightValue()) {
+				pilot.rotate(-5);
+			}
+
+		}
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Button.waitForAnyPress();
+		Part12 pa = new Part12();
+		pa.run();
+	}
+
+}
