@@ -47,7 +47,6 @@ public class Part1 {
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		Button.waitForAnyPress();
 	    Part1 p = new Part1();
 		p.run();
