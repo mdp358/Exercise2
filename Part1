@@ -1,55 +1,54 @@
-import lejos.util.PIDController;
-import lejos.util.Delay;
 import lejos.nxt.Button;
-import lejos.nxt.LightSensor;
+import lejos.nxt.Motor;
 import lejos.nxt.SensorPort;
 import lejos.nxt.Sound;
 import lejos.nxt.UltrasonicSensor;
-import lejos.nxt.*;
 import lejos.robotics.navigation.DifferentialPilot;
+import lejos.util.Delay;
+import java.lang.Math.*;
 
-public class Part1 {
-	final static DifferentialPilot pilot = new DifferentialPilot(50, 118, Motor.C, Motor.A);
-	
-	
-	private static final int DURATION = 100;
+public class ExPart1 {
+	private static final int duration = 1000;
+	private final boolean M_run = true;
+	//DifferentialPilot pilot = new DifferentialPilot(69, 190, Motor.A,
+			//Motor.C, false);
 
 	public void run() {
-		UltrasonicSensor distanceSensor = new UltrasonicSensor(SensorPort.S1);
-		distanceSensor.continuous();
-
-		while (true) {
-			float distance = distanceSensor.getDistance();
+		UltrasonicSensor Ultra = new UltrasonicSensor(SensorPort.S1);
+		
+		Sound.setVolume(duration);
+		Ultra.continuous();
+		
+		while (M_run) {
 			
-			if(50<distance && distance<255){
-				pilot.setTravelSpeed(50);
-				pilot.forward();
+			int distance = Ultra.getDistance();
+			float power = (1000*(distance/255f));
+			System.out.println(distance);
 			
-			}
-			else if (distance<50 && distance > 25){
-				pilot.setAcceleration(-20);
-				pilot.forward();
-			}
-			else if (distance<25){
-				pilot.backward();
-			}
+			//int a = (int)(Motor.A.getMaxSpeed());
 			
+			Motor.A.setSpeed(power);
+			Motor.C.setSpeed(power);
+			Motor.A.backward();
+			Motor.C.backward();
+			//pilot.forward();
 			
-			//int freq = (int) (2500f * (distance / 255f));
-			//Sound.playTone(freq, DURATION);
-			//Delay.msDelay(DURATION);
+			Delay.msDelay(duration);
+			System.out.println(Motor.A.getRotationSpeed() + Motor.C.getRotationSpeed());
+			
 		}
 
 	}
 
-	private int lightValueToFrequency(int lightValue) {
-		return (int) (2500f * (lightValue / 100f));
-	}
-
 	public static void main(String[] args) {
+		
+		ExPart1 run = new ExPart1();
+		
+		
+			
+		run.run();
 		Button.waitForAnyPress();
-	    Part1 p = new Part1();
-		p.run();
+		
 
 	}
 
