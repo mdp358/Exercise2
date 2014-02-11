@@ -5,68 +5,71 @@ import lejos.nxt.SensorPort;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.util.Delay;
 
-
 public class Part2a {
 	public static void main(String[] args) {
-		
-		DifferentialPilot pilot = new DifferentialPilot(69, 190, Motor.C, Motor.A, true);
-		
+
+		DifferentialPilot pilot = new DifferentialPilot(69, 250, Motor.C,
+				Motor.A, true);
+
 		LightSensor right = new LightSensor(SensorPort.S2);
 		LightSensor left = new LightSensor(SensorPort.S3);
 		
-		pilot.setTravelSpeed(100);
+		Button.waitForAnyPress();
+		//calibrate value for light sensor
+		//under normal light, black is below 35
+		int threshold = (int) left.readValue() + ((right.readValue() - left.readValue()) / 4);
+		System.out.println("Threshold at " + threshold);
+	
+		pilot.setTravelSpeed(150);
 		pilot.setRotateSpeed(30);
 		int count = 0;
 		Button.waitForAnyPress();
 		
-		//calibrate the light..
-		
-		
-		
-		while(count<26) {
-			
-			//scripting "C2"
-			if(left.readValue() < 38 && right.readValue() < 38){ //when 
+		while (count < 15) {
+
+			// scripting "C2"
+			if (left.readValue() < threshold && right.readValue() < threshold) { // when
 				count++;
 				System.out.println(count);
-				pilot.travel(100);
-				if( count == 3 || count == 8){
-					pilot.rotate(-150); //turn left
-				}
-				else if(count == 15 || count == 17 || count == 20 || count == 22){
-					pilot.rotate(90); //turn right
-				}
-				else if(count == 11 || count == 12){
+				pilot.travel(75);
+				if (count == 12 || count == 13) {
+					pilot.rotate(-120); // turn left
+				} else if (count == 2 || count == 4 || count == 9
+						|| count == 10) {
+					pilot.rotate(120); // turn right
+				} else if (count == 6 || count == 7) {
 					pilot.stop();
-					Delay.msDelay(2000); //pausing between end of "c" and start of "2"
-					pilot.travel(10); //move forward a bit to get out of both black
-				}
-				else{
+					Delay.msDelay(1000); // pausing between end of "c" and start
+											// of "2"
+					pilot.travel(10); // move forward a bit to get out of both
+										// black
+				} else {
 					pilot.forward();
 				}
 			}
-			
-			if(left.readValue() > 38 && right.readValue() > 38){
-				System.out.println("Forward " + right.readValue() + " "  + left.readValue());
+
+			if (left.readValue() > threshold && right.readValue() > threshold) {
+				System.out.println("Forward " + right.readValue() + " "
+						+ left.readValue());
 				pilot.forward();
 			}
-			
-			//correcting path
-			else if(left.readValue() < 38){
-				System.out.println("Left " + right.readValue() + " "  + left.readValue());
-				pilot.rotate(-15);
+
+			// correcting path
+			else if (left.readValue() < threshold) {
+				System.out.println("Left " + right.readValue() + " "
+						+ left.readValue());
+				pilot.rotateRight();
 			}
-			
-			//correcting path
-			else if(right.readValue() < 38){
-				System.out.println("Right " + right.readValue() + " "  + left.readValue());
-				pilot.rotate(15);
+
+			// correcting path
+			else if (right.readValue() < threshold) {
+				System.out.println("Right " + right.readValue() + " "
+						+ left.readValue());
+				pilot.rotateLeft();
 			}
-			
+
 		}
 		pilot.stop();
 	}
-		
-	
-	
+
 }
