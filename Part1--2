@@ -1,4 +1,3 @@
-
 import lejos.nxt.Button;
 import lejos.nxt.LightSensor;
 import lejos.nxt.Motor;
@@ -40,17 +39,7 @@ else if(right.readValue() < threshold){
 System.out.println("Right " + right.readValue() + " " + left.readValue());
 pilot.rotateLeft();
 }
-/*
-//overriding rule when going past sharp corner
-else{ //when both black
-if(count == 1){
-pilot.rotate(-40);
-}
-else if(count == 2){
-pilot.rotate(40);
-}
-}
-*/
+
 }
 
 
