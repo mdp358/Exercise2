@@ -6,8 +6,9 @@ import lejos.robotics.navigation.DifferentialPilot;
 import lejos.util.Delay;
 
 
-public class Part2 {
+public class Part2a {
 	public static void main(String[] args) {
+		
 		DifferentialPilot pilot = new DifferentialPilot(69, 190, Motor.C, Motor.A, true);
 		
 		LightSensor right = new LightSensor(SensorPort.S2);
@@ -17,14 +18,20 @@ public class Part2 {
 		pilot.setRotateSpeed(30);
 		int count = 0;
 		Button.waitForAnyPress();
+		
+		//calibrate the light..
+		
+		
+		
 		while(count<26) {
 			
 			//scripting "C2"
 			if(left.readValue() < 38 && right.readValue() < 38){ //when 
 				count++;
 				System.out.println(count);
+				pilot.travel(100);
 				if( count == 3 || count == 8){
-					pilot.rotate(-90); //turn left
+					pilot.rotate(-150); //turn left
 				}
 				else if(count == 15 || count == 17 || count == 20 || count == 22){
 					pilot.rotate(90); //turn right
