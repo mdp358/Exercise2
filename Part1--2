@@ -1,3 +1,4 @@
+
 import lejos.nxt.Button;
 import lejos.nxt.LightSensor;
 import lejos.nxt.Motor;
@@ -6,58 +7,52 @@ import lejos.robotics.navigation.DifferentialPilot;
 
 
 public class Part1_2 {
-	
-	public static void main(String[] args) {
-		DifferentialPilot pilot = new DifferentialPilot(50, 118, Motor.C, Motor.A, true);
-		
-		LightSensor right = new LightSensor(SensorPort.S2);
-		LightSensor left = new LightSensor(SensorPort.S3);
-		
-		//need to calibrate
-		/**
-		 * Testing light readings
-		 *	black is below 35
-		 * while(true) {
-			Button.waitForAnyPress();
-			System.out.println("RIGHT: " + right.readValue());
-			System.out.println("LEFT: " + left.readValue());
-			
-			}
-		 * 
-		 */
-		
-		pilot.setTravelSpeed(100); //60 works but a bit slow
-		pilot.setRotateSpeed(50);	//10 works but a bit slow
-		Button.waitForAnyPress();
-		while(true) {
-			
-			if(left.readValue() > 35 && right.readValue() > 35){
-				System.out.println("Forward " + right.readValue() + " "  + left.readValue());
-				pilot.forward();
-			}
-			
-			else if(left.readValue() < 35){
-				System.out.println("Left " + right.readValue() + " "  + left.readValue());
-				pilot.rotate(-15);
-			}
-			
-			else if(right.readValue() < 35){
-				System.out.println("Right " + right.readValue() + " "  + left.readValue());
-				pilot.rotate(15);
-			}
-			/*
-			//overriding rule when going past sharp corner
-			else{ //when both black
-				if(count == 1){
-					pilot.rotate(-40);
-				}
-				else if(count == 2){
-					pilot.rotate(40);
-				}
-			}
-			*/
-		}
-		
-		
-	}
+
+public static void main(String[] args) {
+DifferentialPilot pilot = new DifferentialPilot(50, 118, Motor.C, Motor.A, true);
+
+LightSensor right = new LightSensor(SensorPort.S2);
+LightSensor left = new LightSensor(SensorPort.S3);
+
+Button.waitForAnyPress();
+//calibrate value for light sensor
+//under normal light, black is below 35
+int threshold = (int) left.readValue() + ((right.readValue() - left.readValue()) / 4);
+System.out.println("Threshold at " + threshold);
+
+pilot.setTravelSpeed(60); //60 works but a bit slow
+pilot.setRotateSpeed(100); //10 works but a bit slow
+Button.waitForAnyPress();
+
+while(true) {
+
+if(left.readValue() > threshold && right.readValue() > threshold){
+System.out.println("Forward " + right.readValue() + " " + left.readValue());
+pilot.forward();
+}
+
+else if(left.readValue() < threshold){
+System.out.println("Left " + right.readValue() + " " + left.readValue());
+pilot.rotateRight();
+}
+
+else if(right.readValue() < threshold){
+System.out.println("Right " + right.readValue() + " " + left.readValue());
+pilot.rotateLeft();
+}
+/*
+//overriding rule when going past sharp corner
+else{ //when both black
+if(count == 1){
+pilot.rotate(-40);
+}
+else if(count == 2){
+pilot.rotate(40);
+}
+}
+*/
+}
+
+
+}
 }
