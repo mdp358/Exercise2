@@ -1,0 +1,65 @@
+import lejos.nxt.Button;
+import lejos.nxt.LightSensor;
+import lejos.nxt.Motor;
+import lejos.nxt.SensorPort;
+import lejos.robotics.navigation.DifferentialPilot;
+import lejos.util.Delay;
+
+
+public class Part2 {
+	public static void main(String[] args) {
+		DifferentialPilot pilot = new DifferentialPilot(69, 190, Motor.C, Motor.A, true);
+		
+		LightSensor right = new LightSensor(SensorPort.S2);
+		LightSensor left = new LightSensor(SensorPort.S3);
+		
+		pilot.setTravelSpeed(100);
+		pilot.setRotateSpeed(30);
+		int count = 0;
+		Button.waitForAnyPress();
+		while(count<26) {
+			
+			//scripting "C2"
+			if(left.readValue() < 38 && right.readValue() < 38){ //when 
+				count++;
+				System.out.println(count);
+				if( count == 3 || count == 8){
+					pilot.rotate(-90); //turn left
+				}
+				else if(count == 15 || count == 17 || count == 20 || count == 22){
+					pilot.rotate(90); //turn right
+				}
+				else if(count == 11 || count == 12){
+					pilot.stop();
+					Delay.msDelay(2000); //pausing between end of "c" and start of "2"
+					pilot.travel(10); //move forward a bit to get out of both black
+				}
+				else{
+					pilot.forward();
+				}
+			}
+			
+			if(left.readValue() > 38 && right.readValue() > 38){
+				System.out.println("Forward " + right.readValue() + " "  + left.readValue());
+				pilot.forward();
+			}
+			
+			//correcting path
+			else if(left.readValue() < 38){
+				System.out.println("Left " + right.readValue() + " "  + left.readValue());
+				pilot.rotate(-15);
+			}
+			
+			//correcting path
+			else if(right.readValue() < 38){
+				System.out.println("Right " + right.readValue() + " "  + left.readValue());
+				pilot.rotate(15);
+			}
+			
+		}
+		pilot.stop();
+	}
+		
+	
+	
+}
