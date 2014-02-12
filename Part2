@@ -33,7 +33,7 @@ public class Part2a {
 				System.out.println(count);
 				pilot.travel(75);
 				if (count == 12 || count == 13) {
-					pilot.rotate(-120); // turn left
+					pilot.rotate(-90); // turn left
 				} else if (count == 2 || count == 4 || count == 9
 						|| count == 10) {
 					pilot.rotate(120); // turn right
