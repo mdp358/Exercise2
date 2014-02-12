@@ -22,7 +22,7 @@ public class ExPart1 {
 		while (M_run) {
 			
 			int distance = Ultra.getDistance();
-			float power = (1000*(distance/255f));
+			float power = (1500*(distance/255f));
 			System.out.println(distance);
 			
 			Motor.A.setSpeed(power);
